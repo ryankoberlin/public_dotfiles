@@ -1,0 +1,129 @@
+#!/usr/bin/perl
+
+use Data::Dumper qw(Dumper);
+use Filesys::Df;
+use Acpi::Battery;
+
+# Colors
+my $KWHT = "\x01"; # white on black
+my $KBLU = "\x02"; # white on blue (normal statusbar color)
+my $KYEL = "\x03"; # black on yello
+my $KRED = "\x04"; # white on red
+my $KGRN = "\x05"; # green on blue
+
+# Define vars
+#my $load_file = '/proc/loadavg';
+my $disk1 = '/';
+#my $temp_file = '/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input';
+#my $batt_file = '/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0/capacity';
+#my $state_file = '/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0/status';
+
+sub get_uptime {
+    my @uptime = split(' ', qx(uptime));
+    if ($uptime[6] =~ 'user,') {
+        my $up = join(' ', @uptime[2..4]);
+        $up =~ s/\,//g;
+        my $out = sprintf("%sUptime: %s%s", $KGRN, $up, $KWHT);
+        return $out;
+    } elsif ($uptime[3] =~ '\smin\s') {
+        my $up = $uptime[2];
+        $up =~ s/\,//g;
+        my $out = sprintf("%sUptime: %s min%s", $KGRN, $up, $KWHT);
+        return $out;
+    } else {
+        my $up = $uptime[2];
+        $up =~ s/\,//g;
+        my $out = sprintf("%sUptime: %s%s", $KGRN, $up, $KWHT);
+        return $out;
+    }
+}
+
+sub get_load {
+    my (undef, $average) = split('=', qx(sysctl vm.loadavg));
+    chomp $average;
+    if ($average =~ /[5-999]+\.[0-9]+/) {
+        my $out = sprintf("%sLoad: $average%s", $KRED, $KWHT);
+        return $out;
+    } elsif ($average =~ /[1-999]+\.[0-9]+/) {
+        my $out = sprintf("%sLoad: $average%s", $KYEL, $KWHT);
+        return $out;
+    } else {
+        my $out = sprintf("%sLoad: $average%s", $KGRN, $KWHT);
+        return $out;
+    }
+}
+
+sub get_temp {
+    our $temp;
+    my $input = qx(sysctl hw.sensors.cpu0.temp0);
+    if ($input =~ /(\d{2})/) {
+        $temp = $1;
+    }
+    if ($temp >= 80) {
+        my $out = sprintf("%sTemp: %s%s", $KRED, $temp, $KWHT);
+    } elsif ($temp >= 50) {
+        my $out = sprintf("%sTemp: %s%s", $KYEL, $temp, $KWHT);
+        return $out;
+    } else {
+        my $out = sprintf("%sTemp: %s%s", $KGRN, $temp, $KWHT);
+        return $out;
+    }
+}
+
+## Disk usage
+sub get_disk {
+    my $ref = df($disk1, 4096);  # Default output is 1K blocks
+    if(defined($ref)) {
+       my $out = (($ref->{bavail}*4096)/1024e6);
+       return sprintf("%s/ Used: %.2f GB%s", $KGRN, $out,$KWHT);
+     }
+}
+
+sub get_bat {
+    my $batt = qx(apm -l);
+    chomp $batt;
+    our $state = get_batstate();
+    if ($batt <= 30) {
+        my $out = sprintf("%sBAT0 %s %s%%%s", $KRED, $state, $batt, $KWHT);
+        return $out;                                          
+    } elsif ($batt <= 75) {                                   
+        my $out = sprintf("%sBAT0 %s %s%%%s", $KYEL, $state, $batt, $KWHT);
+        return $out;                                          
+    } else {                                                  
+        my $out = sprintf("%sBAT0 %s %s%%%s", $KGRN, $state, $batt, $KWHT);
+        return $out;
+    }
+}
+
+sub get_batstate {
+    my $state = qx(sysctl hw.sensors.acpibat0.raw0);    
+    if ($state =~ "discharging") {
+        return "-";
+    } else {
+        return "+";
+    }
+}
+sub get_date {
+    my $date = localtime();
+    my $out = sprintf("%s%s%s", $KGRN, $date, $KWHT);
+    return $out;
+}
+
+## Build the status bar
+for (our $loops = 60;$loops <= 60; $loops) {
+    our $time = get_date();
+    our $uptime = get_uptime();
+    if ($loops == 60) {
+        $du = get_disk();
+        $loops = 0;
+    }
+    if (($loops % 2) == 0) {
+        $temp = get_temp();
+        $load = get_load();
+        $bat = get_bat();
+        #        $batt_charge = get_charge();
+    }
+    my $root = qq($uptime$du$bat$load$temp$time);
+    system(qq(xsetroot -name "$root"));
+    sleep 1;
+}
