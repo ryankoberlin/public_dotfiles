@@ -1,0 +1,34 @@
+xlogin.Login.echoPasswd:       false
+xlogin*fail:                   Incorrect
+xlogin.Login.greeting:         \040\040\040\040Welcome
+xlogin.Login.namePrompt:       LOGIN:\040\040\040
+xlogin.Login.passwdPrompt:     PASSWD:
+
+! xlogin*logoFileName: /etc/X11/xenodm/pixmaps/OpenBSD_15bpp.xpm
+xlogin*logoFileName: /home/roberlin/Pictures/run-bsd.xpm
+
+xlogin.Login.height:           320
+xlogin.Login.width:            600
+! xlogin.Login.y:                300
+! box around greeter
+! xlogin.Login.frameWidth:       0
+! boxes around input
+! xlogin.Login.innerFramesWidth: 0 
+
+xlogin*useShape: true
+xlogin*logoPadding: 50
+
+xlogin*greetColor: white
+xlogin.Login.background:       black
+xlogin.Login.foreground:       #eeeeee
+xlogin*failColor:        white
+xlogin.Login.inpColor:         black
+xlogin.Login.promptColor:      #eeeeec
+! xlogin*shdColor: white
+! xlogin*hiColor: white
+
+xlogin*greetFace:              Spleen-32:Regular:dpi=75
+xlogin.Login.face:             Spleen-16:Regular  
+xlogin*failFace:               Spleen-12:Regular 
+xlogin.Login.promptFace:       Spleen-16:Regular
+
