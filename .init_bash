@@ -1,0 +1,110 @@
+export PAGER='less'
+export VISUAL='nvim'
+export EDITOR='nvim'
+export HISTCONTROL=ignoreboth
+
+PATH="/home/roberlin/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/roberlin/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/roberlin/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/roberlin/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/roberlin/perl5"; export PERL_MM_OPT;
+
+export GOPATH=$HOME/Go
+export PATH=$HOME/bin:/usr/local/bin:$GOPATH:$PATH
+export LS_OPTIONS="-oT"
+
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export LIGHTGREEN="\001\033[1;32m\002"
+export LIGHTRED="\001\033[1;31m\002"
+export WHITE="\001\033[0;37m\002"
+export RESET="\001\033[0;00m\002"
+export BLUE="\001\033[38;5;6m\002"
+export YELLOW="\033[01;33m\002"
+export PURPLE="\033[01;35m\002"
+export CYAN="\033[01;36m\002"
+export BOLD="\033[1m\002"
+export UNDERLINE="\033[4m\002"
+
+# if [[ ! $COLUMNS ]]; then
+# 	export COLUMNS=80
+# fi
+
+function git_status() {
+    if [ -e ./.git ]; then 
+        ### printf "%*s" $COLUMNS "right prompt"
+        git_check=$(git status -sb)
+        STATUS=$(git status -sb | pcregrep -o "(?<=\[).*?(?=\])")
+        BRANCH=$(git branch | grep \*|awk '{print $NF}')
+        if [[ $(git status -s | wc -l) -gt 0 ]]; then
+            # Assume we're out of sync somewhere
+            if echo $git_check | grep 1>/dev/null -Ei 'ahead|behind'; then
+                printf "%*s" $(($COLUMNS + 18)) "< $LIGHTRED [$BRANCH [$STATUS]]"
+            elif echo $git_check | grep 1>/dev/null -Ei '^\?|A|D'; then
+                printf "%*s" $(($COLUMNS + 18)) "<$LIGHTRED OOS [$BRANCH]"
+            fi
+        else
+            printf "%*s" $(($COLUMNS + 18)) "<$LIGHTGREEN UTD [$BRANCH]"
+        fi
+    else return 0;
+    fi
+}
+
+function rightprompt() {
+	printf "%*s" $COLUMNS "${JOBS} ${PSET}"
+}
+
+function error_test {
+    if [[ $? = "0" ]]; then
+        echo -e "$LIGHTGREEN"
+    else
+        echo -e "$LIGHTRED"
+    fi
+}
+
+function set_bash_prompt() {
+		if [[ $TERM == "screen-256color" ]]; then
+			printf "\033k%s\033\\" "$HOSTNAME"
+		fi
+		JOBTEST=$(jobs)
+		if [[ ! -z $JOBTEST ]]; then
+			JOBS=$(jobs|awk '/^\[[0-9]\]/{print $1}'|tail -1 |cut -c1-3)
+		else
+			JOBS=''
+		fi
+        ##PS1="\[$(tput sc; rightprompt; tput rc)\]\$(error_test)\h${RESET}:${PWD} ${JOBS} ${PSET} > "
+        PS1="\[$(tput sc; rightprompt; tput rc)\]\$(error_test)\h${RESET}:${PWD} # "
+}
+
+PROMPT_COMMAND=set_bash_prompt
+
+#: aliases @ Aliases for quality of life
+alias ...='cd ../../../'
+alias ll='ls -lh ${LS_OPTIONS}'
+alias l='ls -1a'
+alias ls='/usr/local/bin/colorls -G'
+alias lsdot='ls -ld ${LS_OPTIONS} .*'
+alias lsdot='ls -ld ${LS_OPTIONS} .*'
+alias lst='ls -lArtch ${LS_OPTIONS}'
+alias mv='mv -v'
+alias rm='rm -i'
+alias vim='nvim -n'
+alias vim='vim -n'
+
+## Completion
+complete -W "$(awk '/^#:/{print $2}' ~/.functions.bash)" fnhelp
+complete -W "$(alias|awk -F= '{print $1}'|cut -c7-)" als alsp
+complete -W "$(awk '/^#:\ /{print $2}' ~/.functions.bash)" fnls
+alias screencmd="grep ^bind ~/.screenrc | cut -d' ' -f2-"
+
+# Enabling fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+## Source functions
+if [[ -f ~/.functions.bash ]]; then
+	. ~/.functions.bash
+	else
+	echo "Functions not found!"
+fi
+
