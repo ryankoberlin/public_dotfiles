@@ -1,11 +1,7 @@
 " Specify a directory for plugins
 " - For Neovim: ~/.local/share/nvim/plugged
 " - Avoid using standard Vim directory names like 'plugin'
-"call plug#begin('~/.vim/plugged')
 call plug#begin('~/.local/share/nvim/plugged')
-
-"" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align'
 
 " Vim colorschemes
 Plug 'flazz/vim-colorschemes'
@@ -13,41 +9,22 @@ Plug 'flazz/vim-colorschemes'
 " Vim ctrlspace
 Plug 'vim-ctrlspace/vim-ctrlspace'
 
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-
-" Using a non-master branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
-
-Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
-
-
-" Plugin options
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
-Plug 'vim-airline/vim-airline'            " Lean & mean status/tabline for vim
-Plug 'vim-airline/vim-airline-themes'     " Themes for airline
-"Plug 'tpope/vim-fugitive'
-Plug 'majutsushi/tagbar'                  " Tagbar
-Plug 'neomake/neomake'                    " Asynchronous Linting and Make Framework
-"Plug 'jreybert/vimagit'
+" Asynchronous Linting and Make Framework
+Plug 'neomake/neomake'
 
-Plug 'kien/rainbow_parentheses.vim'       " Rainbow Parentheses
-"Plug 'ryanoasis/vim-devicons'             " Dev Icons
+" Rainbow Parentheses
+Plug 'kien/rainbow_parentheses.vim'
 
-""-------------------=== Languages support ===-------------------
-Plug 'scrooloose/nerdcommenter'           " Easy code documentation
-Plug 'mitsuhiko/vim-sparkup'              " Sparkup(XML/jinja/htlm-django/etc.) support
+" Tagbar
+Plug 'majutsushi/tagbar'
+
+" Asynchronous Linting Engine
 Plug 'w0rp/ale'
 
 if has('nvim')
@@ -57,42 +34,11 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
+
 let g:deoplete#enable_at_startup = 1
 
 " Initialize plugin system
 call plug#end()
-
-" Clang completion for deoplete:
-" Change clang binary path
-"autocmd BufRead,BufNewFile *.c call deoplete#enable()
-"call deoplete#custom#var('clangx', 'clang_binary', '/usr/bin/clang')
-" Change clang options
-"call deoplete#custom#var('clangx', 'default_c_options', '')
-"call deoplete#custom#var('clangx', 'default_cpp_options', '')
-
-" Enabling for certain file extensions
-"autocmd FileType txt
-"\ call deoplete#custom#buffer_option('auto_complete', v:true)
-"
-"autocmd FileType c
-"\ call deoplete#custom#buffer_option('auto_complete', v:true)
-
-"autocmd FileType py
-"\ call deoplete#custom#buffer_option('auto_complete', v:true)
-
-" NT settings
-" Start nerdtree if no file in edit or opening a directory, and close if it's the only thing open
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" NT toggle
-nmap " :NERDTreeToggle<CR>
-
-" Begin Themes:
-colo seoul256
-set background=dark
 
 " Neomake
 call neomake#configure#automake('w')
@@ -102,20 +48,6 @@ let g:neomake_open_list = 2
 " History
 set incsearch	                            " incremental search
 set hlsearch	                            " highlight search results
-
-" Relative Numbering
-nnoremap <F4> :set relativenumber!<CR>
-
-" Airline
-let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#formatter='unique_tail'
-let g:airline_powerline_fonts=1
-"let g:airline_theme='deus'
-let g:airline_theme='zenburn'
-
-colorscheme zenburn
-" Tagbar toggle
-nmap <F8> :TagbarToggle<CR>
 
 " General settings
 set number
@@ -133,57 +65,131 @@ set shiftwidth=4
 set smarttab
 set expandtab
 set autoindent
+set foldcolumn=1
 
-syntax enable
-tab sball
-set switchbuf=useopen
+autocmd Filetype perl setlocal ts=3 sw=3 expandtab
+autocmd FileType perl set autoindent|set smartindent
+
+let perl_fold=1
+let perl_fold_blocks=1
+
+" Statusline
 set laststatus=2
-nmap <F9> :bprev<CR>
-nmap <F10> :bnext<CR>
-nmap <silent> <leader>q :SyntasticCheck # <CR> :bp <BAR> bd #<CR>
-set backspace=indent,eol,start
+set statusline=
+set statusline+=\ %*
+set statusline+=\ ‹
+set statusline+=\ %f\ %*
+set statusline+=\ ›
+set statusline+=\ %m
+set statusline+=\ %F
+set statusline+=%=
+set statusline+=\ ‹
+set statusline+=\ %l
+set statusline+=\ ::
+set statusline+=\ %v
+set statusline+=\ ›\ %*
 
-"let g:pymode_python = 'python3'
-"set pyxversion=3
-let $NVIM_PYTHON_LOG_FILE="/tmp/nvim_log"
-let $NVIM_PYTHON_LOG_LEVEL="DEBUG"
+" Keybindings
+vnoremap K :m '<-2<CR>gv=gv				" Move visual block up 
+vnoremap J :m '>+1<CR>gv=gv				" Move visual block down 
+nnoremap <F4> :set relativenumber!<CR> 	" Relative Numbering
+nnoremap () mMI(<esc>A)<esc>`M 			" wrap the current line in (), e.g:
+nnoremap )) mMi(<esc>A)<esc>`M 			" wrap the rest of the line in ()
+nnoremap (( mMI(<esc>`Mla)<esc> 		" wrap the line so far in ()
+noremap cd :call CommentThings() <CR> 	" Keybinding to comment line
+noremap <space> zfa{ 					" Bind space to fold between {} in normal mode
+nmap <F8> :TagbarToggle<CR>				" Tagbar toggle
+nmap " :NERDTreeToggle<CR>				" NerdTree toggle
+" End Keybindings
 
-set listchars=tab:›\ ,trail:•,extends:#,nbsp:.
+" CtrlSpace mapping
+let g:CtrlSpaceDefaultMappingKey = "<C-space> "
 
-"=====================================================
-"" NERDComment Settings 
-"=====================================================
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
+" Clear search 
+command -nargs=0 CLR let @/ = ''
 
-" Use compact syntax for prettified multi-line comments
-let g:NERDCompactSexyComs = 1
+" Tabline
+function MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
 
-" Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDDefaultAlign = 'left'
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
 
-" Set a language to use its alternate delimiters by default
-let g:NERDAltDelims_java = 1
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
 
-" Add your own custom formats or override the defaults
-let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
 
-" Allow commenting and inverting empty lines (useful when commenting a region)
-let g:NERDCommentEmptyLines = 1
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999Xclose'
+  endif
 
-" Enable trimming of trailing whitespace when uncommenting
-let g:NERDTrimTrailingWhitespace = 1
+  return s
+endfunction
 
-" Call neomake when writing a buffer (no delay).
-call neomake#configure#automake('w')
+function MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  return bufname(buflist[winnr - 1])
+endfunction
+
+set showtabline=2
+set tabline=%!MyTabLine()
+
+"let g:seoul256_background = 233
+"colo seoul256
+colo jellybeans
+
+" Setting folding for bash
+""au FileType sh let g:is_bash=1
+au FileType sh set foldmethod=syntax
+au FileType sh let g:sh_fold_enabled=7
+
+" Function to comment lines
+function! CommentThings()
+	s/\v(^.*)$/\#\ \1/g
+	let @/ = ''
+	call cursor( line('.')+1, 1)
+endfunction
+
+" Function to fold all perl subroutines
+function FoldAllSubs()
+	%g/^sub.*{/normal! zf%
+	let @/ = ''
+	echo "Folded all found subroutines"
+endfunction
+
+" Function to fold all bash functions
+function FoldAllBash()
+	%g/^function.*()\ {/normal! za% " Setting this to za not zf because we can't correctly create folds here, but
+	let @/ = ''	" we can fold them each individually after they've been created by fdm=sytax
+	echo "Folded all found shell functions" 
+endfunction
+
+" Command for same
+command -nargs=0 Foldallperl :call FoldAllSubs()
+command -nargs=0 Foldallbash :call FoldAllBash()
+
+" Keybinding for same
+autocmd Filetype perl noremap <F6> :call FoldAllSubs() <CR>
+autocmd Filetype sh noremap <F6> :call FoldAllBash() <CR>
+
+" Setting fg color for folded text
+hi Folded ctermfg=181
+hi FoldColumn ctermfg=181
 
 " neovim QoL Configs:
-" So we can actually leave insert mode in nvim
+" So we can actually leave insert mode in nvim term
 tnoremap <Esc> <C-\><C-n> 
 " Coloring the terminal cursor red
 highlight TermCursor ctermfg=red guifg=red
-
-
-
-
-

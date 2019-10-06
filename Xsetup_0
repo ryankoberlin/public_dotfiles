@@ -1,0 +1,15 @@
+#!/bin/sh
+# $OpenBSD: Xsetup_0,v 1.6 2019/06/29 13:33:06 espie Exp $
+
+# xconsole -geometry 480x130-0-0 -daemon -notify -verbose -fn fixed -exitOnFail
+
+#  install package openbsd-backgrounds
+#  then uncomment:
+#
+# if test -x /usr/local/bin/openbsd-wallpaper
+# then
+# 	/usr/local/bin/openbsd-wallpaper /etc/X11/xenodm/pictures
+# fi
+/usr/local/bin/nitrogen --set-auto /etc/X11/xenodm/pictures/space-triangle.jpg
+
+# sxpm OpenBSD.xpm &

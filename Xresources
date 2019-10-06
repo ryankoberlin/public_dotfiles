@@ -8,7 +8,7 @@ xlogin.Login.passwdPrompt:     PASSWD:
 xlogin*logoFileName: /home/roberlin/Pictures/run-bsd.xpm
 
 xlogin.Login.height:           320
-xlogin.Login.width:            600
+xlogin.Login.width:            700
 ! xlogin.Login.y:                300
 ! box around greeter
 ! xlogin.Login.frameWidth:       0
