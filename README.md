@@ -17,4 +17,8 @@ status.openbsd - Perl statusbar for OpenBSD
 
 .xinitrc - xinitrc file (symlinked to ~/.xsession)
 
+.init_bash - Bash environment setup
+
+.functions.bash - Functions file
+
 ##### Because sharing is caring
