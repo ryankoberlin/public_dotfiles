@@ -19,9 +19,9 @@ function bsdrd() {
         return 0;
         ;;
         -d)
-        echo "Downloading..."
+        echo "Downloading from ${RD_URL}"
         pushd ~/Downloads
-        wget 2>&1 $RD_URL
+        wget 2>&1>/dev/null $RD_URL
         popd
         ;;
         *)
@@ -34,9 +34,11 @@ function bsdrd() {
     if [[ -f $RD ]]; then
         echo "Using $RD"
         doas mv -v $RD /bsd.rd
+        touch ~/.update
     else
         echo "Using default bsd.rd in ~/Downloads"
         doas mv -v /home/roberlin/Downloads/bsd.rd /bsd.rd
+        touch ~/.update
     fi
     _portsupdate
     exec 1>&3 2>&4
@@ -45,6 +47,9 @@ function bsdrd() {
 
 #: _portsupdate @ Updates ports tree after reboot @ NULL
 function _portsupdate() {
+    _pushd () { pushd 2>&1>/dev/null $1; }
+    _popd () { popd 2>&1>/dev/null $1; }
+    CWD=$PWD
     PORT_URL="https://cdn.openbsd.org/pub/OpenBSD/snapshots/ports.tar.gz"
     SIG_URL="https://cdn.openbsd.org/pub/OpenBSD/snapshots/amd64/SHA256.sig"
     if [[ ! -f ~/.updated ]]; then
@@ -52,19 +57,25 @@ function _portsupdate() {
         return 1
     fi
     echo "Matching ports tree"
-    cd /tmp
+    _pushd /tmp
     ftp $PORT_URL
     ftp $SIG_URL
-    # We don't have a shasum on -current
-    #echo "Running $(signify -Cp /etc/signify/openbsd-$(uname -r | cut -c 1,3)-base.pub -x SHA256.sig ports.tar.gz)"
+#    popd 2>&1>/dev/null
+# We don't have a shasum on -current
+#    echo "Running $(signify -Cp /etc/signify/openbsd-$(uname -r | cut -c 1,3)-base.pub -x SHA256.sig ports.tar.gz)"
 #    if $(signify -Cp /etc/signify/openbsd-$(uname -r | cut -c 1,3)-base.pub -x SHA256.sig ports.tar.gz); then
-        doas cd /usr
-        if $(doas tar xzf /tmp/ports.tar.gz); then
+#        pushd 2>&1>/dev/null /usr
+        echo "Password required:"
+        doas echo "Updating"
+        _pushd /usr
+        if $(doas tar -xzf /tmp/ports.tar.gz); then
             rm -f ~/.updated
+            _popd
         else
             echo "tar failed"
             return 1
         fi
+        _pushd $CWD
 #    else
 #        echo "Signature does not match"
 #        return 1
