@@ -16,4 +16,5 @@ xsetroot -solid grey &
 compton &
 nitrogen --restore &
 slstatus &
+alert &
 dwm 
