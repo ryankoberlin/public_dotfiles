@@ -93,7 +93,7 @@ alias mv='mv -v'
 alias rm='rm -i'
 alias vim='nvim -n'
 alias vim='vim -n'
-alias view='vim -M -n -c "noremap q :q <CR>" -c "set nonumber" -c "set foldcolumn=0" -c "set laststatus=0 ruler"'
+alias view='vim -M -n -c "noremap q :q <CR>" -c "set nonumber" -c "set foldcolumn=0" -c "set laststatus=0 ruler" -c "set nofoldenable"'
 
 ## Completion
 complete -W "$(awk '/^#:/{print $2}' ~/.functions.bash)" fnhelp
