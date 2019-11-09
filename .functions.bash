@@ -104,7 +104,7 @@ function cd() {
 		fi
 		else
 		if [[ $1 == '-' ]]; then
-			pushd 1>/dev/null $OLDPWD
+			pushd 1>/dev/null "$OLDPWD"
 		else
 			if [[ -d "$1" ]]; then
 				pushd "$1" 1>/dev/null
@@ -382,3 +382,7 @@ function unbinary() {
 	' -- "$@"
 }
 
+#: rename @ Removes youtube-dl tags @ rename
+function rename() {
+    ls -1 *.flac|while read f; do name=$(echo $f | sed 's/\-.*.flac/.flac/g'); mv "$f" "$name"; done
+}
