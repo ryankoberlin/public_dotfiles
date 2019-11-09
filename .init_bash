@@ -11,7 +11,7 @@ PERL_MM_OPT="INSTALL_BASE=/home/roberlin/perl5"; export PERL_MM_OPT;
 
 export GOPATH=$HOME/Go
 export PATH=$HOME/bin:/usr/local/bin:$GOPATH:$PATH
-export LS_OPTIONS="-oT"
+#export LS_OPTIONS="-oT"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -83,7 +83,9 @@ PROMPT_COMMAND=set_bash_prompt
 alias ...='cd ../../../'
 alias ll='ls -lh ${LS_OPTIONS}'
 alias l='ls -1a'
-alias ls='/usr/local/bin/colorls -G'
+if [[ $(uname) != Linux ]]; then
+    alias ls='/usr/local/bin/colorls -G'
+fi
 alias lsdot='ls -ld ${LS_OPTIONS} .*'
 alias lsdot='ls -ld ${LS_OPTIONS} .*'
 alias lst='ls -lArtch ${LS_OPTIONS}'
