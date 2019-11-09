@@ -27,6 +27,9 @@ Plug 'majutsushi/tagbar'
 " Asynchronous Linting Engine
 Plug 'w0rp/ale'
 
+" Vim ghost
+Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
