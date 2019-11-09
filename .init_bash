@@ -83,7 +83,7 @@ PROMPT_COMMAND=set_bash_prompt
 alias ...='cd ../../../'
 alias ll='ls -lh ${LS_OPTIONS}'
 alias l='ls -1a'
-if [[ $(uname) != Linux ]]; then
+if [[ $(uname) == OpenBSD ]]; then
     alias ls='/usr/local/bin/colorls -G'
 fi
 alias lsdot='ls -ld ${LS_OPTIONS} .*'
