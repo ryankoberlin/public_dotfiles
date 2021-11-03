@@ -72,6 +72,21 @@ set foldcolumn=1
 
 autocmd Filetype perl setlocal ts=3 sw=3 expandtab
 autocmd FileType perl set autoindent|set smartindent
+autocmd FileType perl set foldlevel=99
+
+" Load boilerplate code
+autocmd BufNewFile *.pl 0r ~/.vim/templates/skeleton.pl
+
+" Reopen the last edited position in files
+autocmd BufReadPost *
+  \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+  \ |   exe "normal! g`\""
+  \ | endif   
+
+" Enable DiffOrig command:
+command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
+  \ | wincmd p | diffthis
+
 
 let perl_fold=1
 let perl_fold_blocks=1
@@ -153,9 +168,13 @@ set tabline=%!MyTabLine()
 "colo seoul256
 colo jellybeans
 
+" Setting foldcolumn:
+set foldcolumn=1
+
 " Setting folding for bash
 ""au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax
+au FileType sh set foldlevel=99
 au FileType sh let g:sh_fold_enabled=7
 
 " Function to comment lines
@@ -172,12 +191,23 @@ function FoldAllSubs()
 	echo "Folded all found subroutines"
 endfunction
 
+
 " Function to fold all bash functions
 function FoldAllBash()
 	%g/^function.*()\ {/normal! za% " Setting this to za not zf because we can't correctly create folds here, but
 	let @/ = ''	" we can fold them each individually after they've been created by fdm=sytax
 	echo "Folded all found shell functions" 
 endfunction
+
+" }} Fixing syntax highlighting
+
+function! CopyMatches(reg)
+  let hits = []
+  %s//\=len(add(hits, submatch(0))) ? submatch(0) : ''/gne
+  let reg = empty(a:reg) ? '+' : a:reg
+  execute 'let @'.reg.' = join(hits, "\n") . "\n"'
+endfunction
+command! -register CopyMatches call CopyMatches(<q-reg>)
 
 " Command for same
 command -nargs=0 Foldallperl :call FoldAllSubs()
@@ -187,9 +217,23 @@ command -nargs=0 Foldallbash :call FoldAllBash()
 autocmd Filetype perl noremap <F6> :call FoldAllSubs() <CR>
 autocmd Filetype sh noremap <F6> :call FoldAllBash() <CR>
 
+" Keybinding to comment line
+noremap cd :call CommentThings() <CR>
+
+" Bind space to fold between {} in normal mode
+noremap <space> zfa{
+
+" Enabling syntax
+syntax on
+
 " Setting fg color for folded text
 hi Folded ctermfg=181
 hi FoldColumn ctermfg=181
+
+nmap <F8> :TagbarToggle<CR>
+let g:tagbar_iconchars = ['+', '-'] 
+
+set runtimepath^=~/.vim/bundle/tagbar-master/
 
 " neovim QoL Configs:
 " So we can actually leave insert mode in nvim term
