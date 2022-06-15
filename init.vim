@@ -225,6 +225,8 @@ noremap <space> zfa{
 
 " Enabling syntax
 syntax on
+filetype plugin on
+filetype indent on
 
 " Setting fg color for folded text
 hi Folded ctermfg=181
