@@ -1,0 +1,54 @@
+# Change prefix
+escape ^tT
+term screen-256color
+
+# Needed for clearing pager output
+altscreen on
+
+# the following two lines give a two-line status, with the current window highlighted
+hardstatus alwayslastline
+hardstatus string '%{= kG}[%{G}Origin %H%? %1`%?%{g}][%= %{= kw}%-w%{+b Yk} (%n %t)%?(%u)%? %{-}%+w %=%{g}][ %l ][%{B}%m/%d %{W}%C%A%{g}]'
+
+# huge scrollback buffer
+defscrollback 500000
+
+# no welcome message
+startup_message off
+
+# Copy mode for mouse scrolling
+bind s copy
+
+# Kill current window
+bind u kill
+bind U remove
+
+# Keybindings
+bind "h" focus left
+bind "j" focus down
+bind "k" focus up
+bind "l" focus right
+bind -c rsz = eval "resize =" "command -c rsz"
+bind "[" prev
+bind "]" next
+bind "m" mousetrack on
+bind "o" mousetrack off
+bind "=" resize =
+bind "+" resize +1
+bind "-" resize -1
+bind "_" resize max
+bind "R" eval "source $HOME/.screenrc" "echo 'Screen config reloaded'" 
+
+# get rid of silly xoff stuff
+bind "%" split -v
+bind "\"" split
+# Rebind , to title
+bind , title
+
+# Disable bell
+vbell off
+
+# All new screen windows will be created in the $HOME dir
+chdir $HOME
+
+caption string "%{03} "
+rendition so =10
