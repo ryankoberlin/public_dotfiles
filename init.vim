@@ -9,6 +9,9 @@ Plug 'flazz/vim-colorschemes'
 " Vim ctrlspace
 Plug 'vim-ctrlspace/vim-ctrlspace'
 
+" Vim devicons
+Plug 'ryanoasis/vim-devicons'
+
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
@@ -27,8 +30,17 @@ Plug 'majutsushi/tagbar'
 " Asynchronous Linting Engine
 Plug 'w0rp/ale'
 
-" Vim ghost
-Plug 'raghur/vim-ghost', {'do': ':GhostInstall'}
+" Autoformat
+Plug 'Chiel92/vim-autoformat'
+
+" Vim-go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+" Vimwiki
+Plug 'vimwiki/vimwiki'
+
+" Vim Surround
+Plug 'tpope/vim-surround'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -225,8 +237,6 @@ noremap <space> zfa{
 
 " Enabling syntax
 syntax on
-filetype plugin on
-filetype indent on
 
 " Setting fg color for folded text
 hi Folded ctermfg=181
@@ -242,3 +252,7 @@ set runtimepath^=~/.vim/bundle/tagbar-master/
 tnoremap <Esc> <C-\><C-n> 
 " Coloring the terminal cursor red
 highlight TermCursor ctermfg=red guifg=red
+
+" Needed for vimwiki
+set nocompatible
+filetype plugin on
