@@ -60,16 +60,13 @@ call neomake#configure#automake('w')
 let g:neomake_open_list = 2
 
 
-" History
-set incsearch	                            " incremental search
-set hlsearch	                            " highlight search results
 
 " General settings
-set number
+set number                                  " Line numbers
 set encoding=utf8
 let base16colorspace=256
 set ttyfast
-set showmatch
+set showmatch                               " Show matching 
 set clipboard=unnamed
 set exrc
 set secure
@@ -81,16 +78,19 @@ set smarttab
 set expandtab
 set autoindent
 set foldcolumn=1
+set incsearch	                            " incremental search
+set hlsearch	                            " highlight search results
+set cursorline                              " Highlight line
 
-autocmd Filetype perl setlocal ts=3 sw=3 expandtab
-autocmd FileType perl set autoindent|set smartindent
-autocmd FileType perl set foldlevel=99
+au Filetype perl setlocal ts=3 sw=3 expandtab
+au FileType perl set autoindent|set smartindent
+au FileType perl set foldlevel=99
 
 " Load boilerplate code
-autocmd BufNewFile *.pl 0r ~/.vim/templates/skeleton.pl
+au BufNewFile *.pl 0r ~/.vim/templates/skeleton.pl
 
 " Reopen the last edited position in files
-autocmd BufReadPost *
+au BufReadPost *
   \ if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
   \ |   exe "normal! g`\""
   \ | endif   
@@ -180,8 +180,6 @@ set tabline=%!MyTabLine()
 "colo seoul256
 colo jellybeans
 
-" Setting foldcolumn:
-set foldcolumn=1
 
 " Setting folding for bash
 ""au FileType sh let g:is_bash=1
@@ -226,8 +224,8 @@ command -nargs=0 Foldallperl :call FoldAllSubs()
 command -nargs=0 Foldallbash :call FoldAllBash()
 
 " Keybinding for same
-autocmd Filetype perl noremap <F6> :call FoldAllSubs() <CR>
-autocmd Filetype sh noremap <F6> :call FoldAllBash() <CR>
+au Filetype perl noremap <F6> :call FoldAllSubs() <CR>
+au Filetype sh noremap <F6> :call FoldAllBash() <CR>
 
 " Keybinding to comment line
 noremap cd :call CommentThings() <CR>
@@ -242,9 +240,9 @@ syntax on
 hi Folded ctermfg=181
 hi FoldColumn ctermfg=181
 
+" Tagbar apparently?
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_iconchars = ['+', '-'] 
-
 set runtimepath^=~/.vim/bundle/tagbar-master/
 
 " neovim QoL Configs:
