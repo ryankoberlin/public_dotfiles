@@ -42,6 +42,9 @@ Plug 'vimwiki/vimwiki'
 " Vim Surround
 Plug 'tpope/vim-surround'
 
+" Vufferline
+Plug 'bling/vim-bufferline'
+
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -250,7 +253,9 @@ set runtimepath^=~/.vim/bundle/tagbar-master/
 tnoremap <Esc> <C-\><C-n> 
 " Coloring the terminal cursor red
 highlight TermCursor ctermfg=red guifg=red
+highlight Normal guibg=NONE ctermbg=NONE
 
 " Needed for vimwiki
 set nocompatible
 filetype plugin on
+

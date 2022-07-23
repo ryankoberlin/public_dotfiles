@@ -14,7 +14,8 @@ my $KGRN = "\x05"; # green on blue
 # Define vars
 my $load_file = '/proc/loadavg';
 my $disk1 = '/';
-my $temp_file = '/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input';
+#my $temp_file = '/sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input';
+my $temp_file = '/sys/devices/pci0000:40/0000:40:01.1/0000:41:00.0/0000:42:00.0/0000:43:00.0/hwmon/hwmon6/temp3_input';
 my $batt_file = '/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0/capacity';
 my $state_file = '/sys/devices/LNXSYSTM:00/LNXSYBUS:00/PNP0A08:00/device:08/PNP0C09:00/PNP0C0A:00/power_supply/BAT0/status';
 
@@ -123,7 +124,7 @@ for (our $loops = 60;$loops <= 60; $loops) {
     if (($loops % 2) == 0) {
         $temp = get_temp();
         $load = get_load();
-        $bat = get_bat();
+        #        $bat = get_bat();
         #        $batt_charge = get_charge();
     }
     my $root = qq($uptime$du$bat$load$temp$time);
