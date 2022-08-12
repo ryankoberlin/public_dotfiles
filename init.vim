@@ -90,7 +90,8 @@ au FileType perl set autoindent|set smartindent
 au FileType perl set foldlevel=99
 
 " Load boilerplate code
-au BufNewFile *.pl 0r ~/.vim/templates/skeleton.pl
+au BufNewFile *.pl 0r ~/.config/nvim/templates/skeleton.pl
+au BufNewFile *.sh 0r ~/.config/nvim/templates/skeleton.sh
 
 " Reopen the last edited position in files
 au BufReadPost *
