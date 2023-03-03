@@ -6,9 +6,6 @@ call plug#begin('~/.local/share/nvim/plugged')
 " Vim colorschemes
 Plug 'flazz/vim-colorschemes'
 
-" Vim ctrlspace
-Plug 'vim-ctrlspace/vim-ctrlspace'
-
 " Vim devicons
 Plug 'ryanoasis/vim-devicons'
 
@@ -62,29 +59,31 @@ call plug#end()
 call neomake#configure#automake('w')
 let g:neomake_open_list = 2
 
-
-
 " General settings
-set number                                  " Line numbers
-set encoding=utf8
+filetype plugin on
 let base16colorspace=256
-set ttyfast
-set showmatch                               " Show matching 
-set clipboard=unnamed
-set exrc
-set secure
-set t_Co=256
-set hidden
-set tabstop=4
-set shiftwidth=4
-set smarttab
-set expandtab
 set autoindent
-set foldcolumn=1
-set incsearch	                            " incremental search
-set hlsearch	                            " highlight search results
+set clipboard=unnamed
 set cursorline                              " Highlight line
-
+set encoding=utf8
+set expandtab
+set exrc
+set foldcolumn=1
+set hidden
+set hlsearch	                            " highlight search results
+set incsearch	                            " incremental search
+set mouse=                                  " 
+set nocompatible
+set number                                  " Line numbers
+set secure
+set shiftwidth=4
+set showmatch                               " Show matching 
+set smarttab
+syntax on
+set t_Co=256
+set tabstop=4
+"set ttyfast
+" 
 au Filetype perl setlocal ts=3 sw=3 expandtab
 au FileType perl set autoindent|set smartindent
 au FileType perl set foldlevel=99
@@ -102,7 +101,6 @@ au BufReadPost *
 " Enable DiffOrig command:
 command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
   \ | wincmd p | diffthis
-
 
 let perl_fold=1
 let perl_fold_blocks=1
@@ -126,23 +124,26 @@ set statusline+=\ ›\ %*
 " Keybindings
 vnoremap K :m '<-2<CR>gv=gv				" Move visual block up 
 vnoremap J :m '>+1<CR>gv=gv				" Move visual block down 
-nnoremap <F4> :set relativenumber!<CR> 	" Relative Numbering
+"nnoremap <F4> :set relativenumber!<CR> 	" Relative Numbering
 nnoremap () mMI(<esc>A)<esc>`M 			" wrap the current line in (), e.g:
 nnoremap )) mMi(<esc>A)<esc>`M 			" wrap the rest of the line in ()
 nnoremap (( mMI(<esc>`Mla)<esc> 		" wrap the line so far in ()
-noremap cd :call CommentThings() <CR> 	" Keybinding to comment line
-noremap <space> zfa{ 					" Bind space to fold between {} in normal mode
+" noremap cd :call CommentThings() <CR> 	" Keybinding to comment line
+" noremap <space> zfa{ 					" Bind space to fold between {} in normal mode
 nmap <F8> :TagbarToggle<CR>				" Tagbar toggle
 nmap " :NERDTreeToggle<CR>				" NerdTree toggle
 " End Keybindings
-
-" CtrlSpace mapping
-let g:CtrlSpaceDefaultMappingKey = "<C-space> "
 
 " Clear search 
 command -nargs=0 CLR let @/ = ''
 
 " Tabline
+" function MyTabLabel(n)
+"     let buflist = tabpagebuflist(a:n)
+"     let winnr = tabpagewinnr(a:n)
+"     return bufname(buflist[winnr - 1])
+" endfunction
+
 function MyTabLine()
   let s = ''
   for i in range(tabpagenr('$'))
@@ -171,26 +172,19 @@ function MyTabLine()
   return s
 endfunction
 
-function MyTabLabel(n)
-  let buflist = tabpagebuflist(a:n)
-  let winnr = tabpagewinnr(a:n)
-  return bufname(buflist[winnr - 1])
-endfunction
 
 set showtabline=2
 set tabline=%!MyTabLine()
 
-"let g:seoul256_background = 233
-"colo seoul256
 colo jellybeans
 
 
 " Setting folding for bash
-""au FileType sh let g:is_bash=1
+au FileType sh let g:is_bash=1
 au FileType sh set foldmethod=syntax
 au FileType sh set foldlevel=99
 au FileType sh let g:sh_fold_enabled=7
-
+" 
 " Function to comment lines
 function! CommentThings()
 	s/\v(^.*)$/\#\ \1/g
@@ -237,12 +231,10 @@ noremap cd :call CommentThings() <CR>
 " Bind space to fold between {} in normal mode
 noremap <space> zfa{
 
-" Enabling syntax
-syntax on
 
-" Setting fg color for folded text
-hi Folded ctermfg=181
-hi FoldColumn ctermfg=181
+" " Setting fg color for folded text
+" hi Folded ctermfg=181
+" hi FoldColumn ctermfg=181
 
 " Tagbar apparently?
 nmap <F8> :TagbarToggle<CR>
@@ -256,7 +248,4 @@ tnoremap <Esc> <C-\><C-n>
 highlight TermCursor ctermfg=red guifg=red
 highlight Normal guibg=NONE ctermbg=NONE
 
-" Needed for vimwiki
-set nocompatible
-filetype plugin on
 
